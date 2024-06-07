@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/inventory"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             name="InventoryService"
+             targetNamespace="http://example.com/inventory">
+    <types>
+        <xsd:schema targetNamespace="http://example.com/inventory">
+            <xsd:element name="updateProductRequest">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="id" type="xsd:int"/>
+                        <xsd:element name="price" type="xsd:decimal"/>
+                        <xsd:element name="stock" type="xsd:int"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateProductResponse">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="success" type="xsd:boolean"/>
+                        <xsd:element name="message" type="xsd:string"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+    <message name="updateProductRequest">
+        <part name="parameters" element="tns:updateProductRequest"/>
+    </message>
+    <message name="updateProductResponse">
+        <part name="parameters" element="tns:updateProductResponse"/>
+    </message>
+    <portType name="InventoryServicePortType">
+        <operation name="updateProduct">
+            <input message="tns:updateProductRequest"/>
+            <output message="tns:updateProductResponse"/>
+        </operation>
+    </portType>
+    <binding name="InventoryServiceSoapBinding" type="tns:InventoryServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="updateProduct">
+            <soap:operation soapAction="http://example.com/inventory/updateProduct"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="InventoryService">
+        <port name="InventoryServiceSoapPort" binding="tns:InventoryServiceSoapBinding">
+            <soap:address location="http://localhost:4000/wsdl"/>
+        </port>
+    </service>
+</definitions>

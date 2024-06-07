@@ -21,7 +21,6 @@ import './lib/handlebars.js';
 import { isAuthenticated, isSeller, isClient } from './middlewares/authMiddleware.js';
 import orderRoutes from './routes/orderRoutes.js';
 
-
 config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -98,46 +97,24 @@ app.get('/', (req, res) => {
   }
 });
 
-// Endpoint REST para obtener un producto por su ID
-app.get('/api/product/:id', async (req, res) => {
-  const productId = req.params.id;
-
-  try {
-    const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [productId]);
-    if (rows.length > 0) {
-      res.json(rows[0]);
-    } else {
-      res.status(404).json({ message: 'Product not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching product data:', error);
-    res.status(500).json({ message: 'Error fetching product data' });
-  }
-});
-
 // Define SOAP service
 const service = {
   InventoryService: {
     InventoryServiceSoapPort: {
-      getProduct: async (args, callback) => {
-        const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [args.id]);
-        if (rows.length > 0) {
-          callback(null, {
-            product: {
-              id: rows[0].id,
-              name: rows[0].name,
-              price: rows[0].price,
-              description: rows[0].description,
-              create_at: rows[0].create_at
-            }
-          });
-        } else {
-          callback({
-            Fault: {
-              faultcode: 'Client',
-              faultstring: 'Product not found'
-            }
-          });
+      updateProduct: async (args, callback) => {
+        try {
+          const [result] = await pool.query(
+            'UPDATE products SET price = ?, stock = ? WHERE id = ?',
+            [args.price, args.stock, args.id]
+          );
+          if (result.affectedRows > 0) {
+            callback(null, { success: true, message: 'Product updated successfully' });
+          } else {
+            callback(null, { success: false, message: 'Product not found' });
+          }
+        } catch (error) {
+          console.error('Error updating product:', error);
+          callback({ success: false, message: 'Error updating product' });
         }
       }
     }
@@ -145,7 +122,7 @@ const service = {
 };
 
 // Importa WSDL
-const wsdl = fs.readFileSync(path.join(__dirname, '..', 'inventoryService.wsdl'), 'utf8');
+const wsdl = fs.readFileSync(path.join(__dirname, 'inventoryService.wsdl'), 'utf8');
 
 app.use('/wsdl', (req, res) => {
   res.set('Content-Type', 'text/xml');
@@ -157,7 +134,19 @@ const server = app.listen(process.env.NODE_DOCKER_PORT, () => {
   soap.listen(server, '/wsdl', service, wsdl);
 });
 
-app.get('/wsdl/product/:id', async (req, res) => {
+// Endpoint REST para obtener todos los productos
+app.get('/api/products', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM products');
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ message: 'Error fetching products' });
+  }
+});
+
+// Endpoint REST para obtener un producto por su ID
+app.get('/api/products/:id', async (req, res) => {
   const productId = req.params.id;
 
   try {

@@ -2,27 +2,31 @@ import { pool } from '../index.js';
 
 export const renderOrders = async (req, res) => {
     try {
-        const [orders] = await pool.query(`
+        const [rows] = await pool.query(`
             SELECT 
-                products.name as product_name, 
+                products.name AS product_name, 
                 order_items.quantity, 
-                order_items.price * order_items.quantity as total_price, 
-                users.fullname as buyer, 
+                order_items.price, 
+                users.fullname AS buyer_name, 
                 orders.address, 
-                orders.create_at 
+                orders.create_at AS order_date
             FROM 
                 order_items 
-            JOIN products ON order_items.product_id = products.id 
-            JOIN orders ON order_items.order_id = orders.id 
-            JOIN users ON orders.user_id = users.id 
-            WHERE products.user_id = ?`, [req.user.id]);
+                JOIN products ON order_items.product_id = products.id 
+                JOIN orders ON order_items.order_id = orders.id 
+                JOIN users ON orders.user_id = users.id
+            WHERE 
+                products.user_id = ?
+            ORDER BY 
+                orders.create_at DESC
+        `, [req.user.id]);
 
         let totalEarnings = 0;
-        orders.forEach(order => {
-            totalEarnings += order.total_price;
+        rows.forEach(item => {
+            totalEarnings += item.price * item.quantity;
         });
 
-        res.render('orders/orders', { orders, totalEarnings });
+        res.render('orders/orders', { orders: rows, totalEarnings: totalEarnings.toFixed(2) });
     } catch (error) {
         console.error('Error fetching orders:', error);
         req.flash('error_msg', 'Error fetching orders');

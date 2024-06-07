@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Ticket</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Purchase Successful</h1>
+        <p class="text-center">Thank you for your purchase! Here are the details of your order:</p>
+
+        <div class="card">
+            <div class="card-body">
+                <h2>Shipping Information</h2>
+                <p><strong>Name:</strong> {{name}}</p>
+                <p><strong>Address:</strong> {{address}}</p>
+                <p><strong>ZIP Code:</strong> {{zip}}</p>
+                <p><strong>Country:</strong> {{country}}</p>
+                <p><strong>Telephone:</strong> {{phone}}</p>
+
+                <h2>Payment Information</h2>
+                <p><strong>Card Number:</strong> **** **** **** {{last4Digits}}</p>
+
+                <h2>Products</h2>
+                <ul>
+                    {{#each products}}
+                    <li>{{quantity}} x {{name}} - ${{price}}</li>
+                    {{/each}}
+                </ul>
+
+                <h3 class="text-center">Total: ${{total}}</h3>
+
+                <div class="text-center">
+                    <a href="/client/products" class="btn btn-primary">Go back to products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

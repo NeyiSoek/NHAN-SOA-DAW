@@ -1,0 +1,38 @@
+<div class="container p-4">
+    <h2>Purchase Orders</h2>
+    <div class="row">
+        {{#if orders.length}}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Buyer</th>
+                        <th>Shipping Address</th>
+                        <th>Order Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each orders}}
+                        <tr>
+                            <td>{{this.product_name}}</td>
+                            <td>{{this.quantity}}</td>
+                            <td>${{this.total_price}}</td>
+                            <td>{{this.buyer}}</td>
+                            <td>{{this.address}}</td>
+                            <td>{{timeago this.create_at}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <h3>Total Earnings: ${{totalEarnings}}</h3>
+        {{else}}
+            <div class="col-md-6 mx-auto">
+                <div class="card card-body text-center">
+                    <p>No orders yet.</p>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="container p-4">
+    <div class="row">
+        {{#each cartItems}}
+            <div class="col-md-3">
+                <div class="card text-center mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-uppercase">{{name}}</h3>
+                        <img src="/uploads/{{image_url}}" alt="{{name}}" class="img-fluid product-image">
+                        <p class="m-2">{{description}}</p>
+                        <p>Price: ${{price}}</p>
+                        <p>Quantity: {{quantity}}</p>
+                        <form action="/cart/remove/{{id}}" method="POST">
+                            <button type="submit" class="btn btn-danger">Remove from Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <div class="text-center">
+        <h2>Total: ${{total}}</h2>
+        <a href="/cart/checkout" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
+</div>

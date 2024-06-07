@@ -1,0 +1,59 @@
+<!-- inventoryService.wsdl -->
+<definitions name="InventoryService"
+             targetNamespace="http://www.example.com/inventory"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.example.com/inventory"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <message name="getProductRequest">
+    <part name="id" type="xsd:int"/>
+  </message>
+  
+  <message name="getProductResponse">
+    <part name="product" type="tns:Product"/>
+  </message>
+  
+  <portType name="InventoryServicePortType">
+    <operation name="getProduct">
+      <input message="tns:getProductRequest"/>
+      <output message="tns:getProductResponse"/>
+    </operation>
+  </portType>
+  
+  <binding name="InventoryServiceSoapBinding" type="tns:InventoryServicePortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getProduct">
+      <soap:operation soapAction="http://www.example.com/inventory#getProduct"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  
+  <service name="InventoryService">
+    <port name="InventoryServiceSoapPort" binding="tns:InventoryServiceSoapBinding">
+      <soap:address location="http://localhost:4000/wsdl"/>
+    </port>
+  </service>
+
+  <types>
+    <xsd:schema targetNamespace="http://www.example.com/inventory">
+      <xsd:element name="Product">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="id" type="xsd:int"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="price" type="xsd:decimal"/>
+            <xsd:element name="description" type="xsd:string"/>
+            <xsd:element name="create_at" type="xsd:dateTime"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+
+</definitions>

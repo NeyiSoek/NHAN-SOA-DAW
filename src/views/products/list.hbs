@@ -1,0 +1,32 @@
+<div class="container p-4">
+  <div class="row">
+    {{#if products.length}}
+      {{#each products}}
+        <div class="col-md-3">
+          <div class="card text-center mb-4">
+            <div class="card-body">
+              <h3 class="card-title text-uppercase">
+                {{name}}
+              </h3>
+              {{#if image_url}}
+                <img src="/uploads/{{image_url}}" alt="{{name}}" class="product-image">
+              {{/if}}
+              <p class="m-2">{{description}}</p>
+              <p>Price: ${{price}}</p>
+              <p>{{timeago create_at}}</p>
+              <a href="/products/delete/{{id}}" class="btn btn-danger">Delete Product</a>
+              <a href="/products/edit/{{id}}" class="btn btn-secondary">Edit</a>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="col-md-4 mx-auto">
+        <div class="card card-body text-center">
+          <p>You have not created any products yet.</p>
+          <a href="/products/add">Create One!</a>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

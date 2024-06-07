@@ -1,0 +1,47 @@
+<div class="container p-4">
+    <div class="row">
+        {{#if cartItems.length}}
+            {{#each cartItems}}
+                <div class="col-md-3">
+                    <div class="card text-center mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title text-uppercase">
+                                {{name}}
+                            </h3>
+                            <img src="/uploads/{{image_url}}" alt="{{name}}" class="img-fluid">
+                            <p class="m-2">{{description}}</p>
+                            <p>Price: ${{price}}</p>
+                            <p>Quantity: {{quantity}}</p>
+                            <a href="#" class="btn btn-danger remove-from-cart" data-id="{{id}}">Remove from Cart</a>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+            <div class="col-md-4 offset-md-8">
+                <h3>Total: ${{total}}</h3>
+                <a href="/cart/checkout" class="btn btn-success w-100">Proceed to Checkout</a>
+            </div>
+        {{else}}
+            <div class="col-md-4 mx-auto">
+                <div class="card card-body text-center">
+                    <p>Your cart is empty.</p>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.remove-from-cart').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const productId = button.getAttribute('data-id');
+            const response = await fetch(`/cart/remove/${productId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                button.closest('.col-md-3').remove();
+            }
+        });
+    });
+</script>

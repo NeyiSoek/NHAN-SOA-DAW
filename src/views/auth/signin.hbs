@@ -1,0 +1,29 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Sign In</h3>
+                </div>
+                <div class="card-body">
+                    <img src="/img/logo.png" alt="Logo NHAN" class="card-img-top mx-auto m-2 rounded-circle w-50">
+                    <form action="/auth/signin" method="post">
+                        <div class="form-group mb-3">
+                            <input type="text" name="username" placeholder="Username" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" name="password" placeholder="Password" class="form-control" required>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-success mb-2">
+                                Sign In
+                            </button>
+                            <p> Or </p>
+                            <a href="/auth/signup" class="btn btn-success nav-link">Sign Up</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>Welcome {{user.fullname}}</h3>
+                    <h4>{{user.username}}</h4>
+                    {{#if (eq user.role "vendedor")}}
+                        <a href="/products" class="btn btn-primary m-4">Save your products</a>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{#if (eq user.role "cliente")}}
+        <div class="row mt-4">
+            {{#each products}}
+                <div class="col-md-3">
+                    <div class="card text-center mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title text-uppercase">
+                                {{name}}
+                            </h3>
+                            {{#if image_url}}
+                                <img src="/uploads/{{image_url}}" alt="{{name}}" class="product-image">
+                            {{/if}}
+                            <p class="m-2">{{description}}</p>
+                            <p>Price: ${{price}}</p>
+                            <p>{{timeago create_at}}</p>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{/if}}
+</div>
